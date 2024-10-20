@@ -17,10 +17,10 @@
    <widget class="QLabel" name="imageLabel">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>48</x>
       <y>240</y>
-      <width>69</width>
-      <height>19</height>
+      <width>211</width>
+      <height>271</height>
      </rect>
     </property>
     <property name="text">
@@ -32,16 +32,16 @@
      <rect>
       <x>330</x>
       <y>240</y>
-      <width>104</width>
-      <height>87</height>
+      <width>461</width>
+      <height>331</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="loadButton">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>120</y>
+      <x>100</x>
+      <y>110</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -53,7 +53,7 @@
    <widget class="QPushButton" name="recognizeButton">
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>380</x>
       <y>120</y>
       <width>93</width>
       <height>28</height>
