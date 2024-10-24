@@ -143,7 +143,10 @@ void TranslateWindow::onApiChanged(int index){
 }
 
 void TranslateWindow::onScreenshotButtonClicked() {
-    screenshotTool->startSelection();
+    ScreenshotTool *tool = new ScreenshotTool();
+    tool->show(); // 显示截图工具
+
+
 }
 void TranslateWindow::processScreenshot(const QPixmap &screenshot) {
     // 这里可以处理截图，例如使用 OCR 识别文字

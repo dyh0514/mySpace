@@ -1,4 +1,3 @@
-// screenshottool.h
 #ifndef SCREENSHOTTOOL_H
 #define SCREENSHOTTOOL_H
 
@@ -8,6 +7,8 @@
 #include <QScreen>
 #include <QGuiApplication>
 #include <QPixmap>
+#include <QCursor>
+#include <QEvent> // 确保包含QEvent头文件
 
 class ScreenshotTool : public QWidget {
     Q_OBJECT
@@ -21,6 +22,9 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void enterEvent(QEnterEvent *event) override;
+
+    void leaveEvent(QEvent *event) override; // 保持为QEvent
 
 signals:
     void screenshotTaken(const QPixmap &screenshot);

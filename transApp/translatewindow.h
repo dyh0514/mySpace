@@ -41,4 +41,5 @@ private:
     QPushButton *saveButton;
 
     ScreenshotTool *screenshotTool;
+    QLabel *screenshotLabel;
 };

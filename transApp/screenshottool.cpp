@@ -1,9 +1,9 @@
-// screenshottool.cpp
 #include "screenshottool.h"
 
 ScreenshotTool::ScreenshotTool(QWidget *parent) : QWidget(parent), selecting(false) {
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    showFullScreen(); // 全屏显示窗口
 }
 
 void ScreenshotTool::startSelection() {
@@ -44,6 +44,16 @@ void ScreenshotTool::mouseReleaseEvent(QMouseEvent *event) {
         takeScreenshot();
         update(); // 更新界面
     }
+}
+
+void ScreenshotTool::enterEvent(QEnterEvent *event) {
+    QGuiApplication::setOverrideCursor(Qt::CrossCursor); // 设置十字光标
+    QWidget::enterEvent(event); // 调用基类方法
+}
+
+void ScreenshotTool::leaveEvent(QEvent *event) {
+    QGuiApplication::restoreOverrideCursor(); // 恢复光标
+    QWidget::leaveEvent(event); // 调用基类方法
 }
 
 void ScreenshotTool::takeScreenshot() {
