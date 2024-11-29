@@ -151,7 +151,7 @@ void TranslateWindow::processScreenshot(const QPixmap &screenshot) {
     QLabel *screenshotLabel = new QLabel(this);
     screenshotLabel->setPixmap(screenshot);
     screenshotLabel->setScaledContents(true);
-    screenshotLabel->setFixedSize(300, 300); // 根据需要调整大小
+    //screenshotLabel->setFixedSize(100, 100); // 根据需要调整大小
     screenshotLabel->show();
 
     // 继续进行 OCR 识别

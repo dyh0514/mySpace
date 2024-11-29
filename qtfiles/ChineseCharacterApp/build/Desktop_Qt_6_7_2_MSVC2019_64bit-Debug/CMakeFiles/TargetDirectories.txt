@@ -1,0 +1,8 @@
+D:/qtfiles/ChineseCharacterApp/build/Desktop_Qt_6_7_2_MSVC2019_64bit-Debug/CMakeFiles/ChineseCharacterApp.dir
+D:/qtfiles/ChineseCharacterApp/build/Desktop_Qt_6_7_2_MSVC2019_64bit-Debug/CMakeFiles/edit_cache.dir
+D:/qtfiles/ChineseCharacterApp/build/Desktop_Qt_6_7_2_MSVC2019_64bit-Debug/CMakeFiles/rebuild_cache.dir
+D:/qtfiles/ChineseCharacterApp/build/Desktop_Qt_6_7_2_MSVC2019_64bit-Debug/CMakeFiles/list_install_components.dir
+D:/qtfiles/ChineseCharacterApp/build/Desktop_Qt_6_7_2_MSVC2019_64bit-Debug/CMakeFiles/install.dir
+D:/qtfiles/ChineseCharacterApp/build/Desktop_Qt_6_7_2_MSVC2019_64bit-Debug/CMakeFiles/install/local.dir
+D:/qtfiles/ChineseCharacterApp/build/Desktop_Qt_6_7_2_MSVC2019_64bit-Debug/CMakeFiles/ChineseCharacterApp_autogen_timestamp_deps.dir
+D:/qtfiles/ChineseCharacterApp/build/Desktop_Qt_6_7_2_MSVC2019_64bit-Debug/CMakeFiles/ChineseCharacterApp_autogen.dir

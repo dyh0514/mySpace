@@ -1,58 +1,112 @@
-// screenshottool.cpp
-#include "screenshottool.h"
+#include "ScreenshotTool.h"
+#include <QApplication>
+#include <QDebug>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QTimer>
 
-ScreenshotTool::ScreenshotTool(QWidget *parent) : QWidget(parent), selecting(false) {
-    setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-    setAttribute(Qt::WA_TransparentForMouseEvents, true);
+ScreenshotTool::ScreenshotTool(QWidget* parent) : QWidget(parent), isSelecting(false) {
+    initUI();
+    setGeometry(0, 0, parent->width(), parent->height());
+}
+
+ScreenshotTool::~ScreenshotTool() {}
+
+void ScreenshotTool::initUI() {
+    setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::Tool);
+    setAttribute(Qt::WA_TranslucentBackground);
+    setCursor(Qt::CrossCursor);
 }
 
 void ScreenshotTool::startSelection() {
-    selecting = true;
-    show(); // 显示截图工具
+    isSelecting = true;
+    selectionRect = QRect(); // 清空选择区域
+
+    // 设置工具窗口覆盖整个屏幕
+    QScreen* screen = QGuiApplication::primaryScreen();
+    if (!screen) {
+        qDebug() << "No screen available for selection!";
+        return;
+    }
+
+    // 捕获全屏内容
+    fullScreenPixmap = captureFullScreen();
+
+    // 设置工具窗口为全屏并显示
+    setGeometry(screen->geometry()); // 设置窗口覆盖屏幕
+    showFullScreen();
+
+    // 确保鼠标样式为十字
+    setCursor(Qt::CrossCursor);
 }
 
-void ScreenshotTool::paintEvent(QPaintEvent *event) {
-    QWidget::paintEvent(event);
+void ScreenshotTool::paintEvent(QPaintEvent* event) {
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
 
-    if (selecting) {
-        QPainter painter(this);
-        painter.setPen(Qt::red);
-        painter.setBrush(QColor(255, 0, 0, 50)); // 半透明填充
-        QRect rect(startPos, endPos);
-        painter.drawRect(rect);
+    // 绘制全屏截图
+    if (!fullScreenPixmap.isNull()) {
+        painter.drawPixmap(0, 0, fullScreenPixmap);
+    }
+
+    // 绘制灰色遮罩
+    painter.fillRect(rect(), QColor(0, 0, 0, 100));
+
+    // 擦除选择区域
+    if (!selectionRect.isNull()) {
+        painter.setCompositionMode(QPainter::CompositionMode_Clear);
+        painter.fillRect(selectionRect, QColor(0, 0, 0, 0));
+        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+
+        // 绘制选择区域边框
+        painter.setPen(QPen(Qt::NoPen));
+        painter.drawRect(selectionRect);
     }
 }
 
-void ScreenshotTool::mousePressEvent(QMouseEvent *event) {
-    if (event->button() == Qt::LeftButton) {
-        selecting = true;
-        startPos = event->pos();
+void ScreenshotTool::mousePressEvent(QMouseEvent* event) {
+    if (isSelecting) {
+        selectionRect.setTopLeft(event->pos());
+        selectionRect.setBottomRight(event->pos());
+        update(); // 触发重绘
     }
 }
 
-void ScreenshotTool::mouseMoveEvent(QMouseEvent *event) {
-    if (selecting) {
-        endPos = event->pos();
-        update(); // 更新界面
+void ScreenshotTool::mouseMoveEvent(QMouseEvent* event) {
+    if (isSelecting) {
+        selectionRect.setBottomRight(event->pos());
+        update(); // 实时更新选择区域
     }
 }
 
-void ScreenshotTool::mouseReleaseEvent(QMouseEvent *event) {
-    if (event->button() == Qt::LeftButton) {
-        selecting = false;
-        endPos = event->pos();
-        takeScreenshot();
-        update(); // 更新界面
+void ScreenshotTool::mouseReleaseEvent(QMouseEvent* event) {
+    if (isSelecting) {
+        isSelecting = false;
+        selectionRect.setBottomRight(event->pos());
+
+        // 捕获选择区域的内容
+        QPixmap selectedArea = captureArea(selectionRect);
+        emit screenshotTaken(selectedArea);
+
+        close(); // 关闭截图窗口
     }
 }
 
-void ScreenshotTool::takeScreenshot() {
-    QRect rect(QPoint(qMin(startPos.x(), endPos.x()), qMin(startPos.y(), endPos.y())),
-               QPoint(qMax(startPos.x(), endPos.x()), qMax(startPos.y(), endPos.y())));
+QPixmap ScreenshotTool::captureFullScreen() {
+    QScreen* screen = QGuiApplication::primaryScreen();
+    if (!screen) {
+        qDebug() << "No screen found for full-screen capture!";
+        return QPixmap();
+    }
+    return screen->grabWindow(0);
+}
 
-    QScreen *screen = QGuiApplication::primaryScreen();
-    if (!screen) return;
-
-    QPixmap screenshot = screen->grabWindow(0, rect.x(), rect.y(), rect.width(), rect.height());
-    emit screenshotTaken(screenshot); // 发射信号
+QPixmap ScreenshotTool::captureArea(const QRect& area) {
+    QScreen* screen = QGuiApplication::primaryScreen();
+    if (!screen) {
+        qDebug() << "No screen found for area capture!";
+        return QPixmap();
+    }
+    QPixmap fullScreen = screen->grabWindow(0);
+    return fullScreen.copy(area);
 }

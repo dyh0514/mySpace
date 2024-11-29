@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/edit.ico</file>
+    </qresource>
+</RCC>
